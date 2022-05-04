@@ -28,6 +28,7 @@ function terraform::perform_apply() {
       init \
         -input=false \
         -upgrade \
+        -reconfigure \
         -backend-config="${BACKEND_VARS_FILENAME}"
     )"
   fi
