@@ -65,6 +65,22 @@ public class AdminProgramController extends CiviFormController {
     return ok(listView.render(this.service.getActiveAndDraftPrograms(), request, profileMaybe));
   }
 
+  /** Return a HTML page containing a form to create a new program in the draft version,
+   * that is a clone of an existing program. */
+  @Secure(authorizers = Authorizers.Labels.CIVIFORM_ADMIN)
+  public Result cloneOne(Request request, long programId) {
+    ProgramDefinition programDefinition;
+    try {
+      programDefinition = service.getProgramDefinition(programId);
+    } catch (ProgramNotFoundException e) {
+      return notFound(e.toString());
+    }
+    ProgramForm program = new ProgramForm(programDefinition);
+    program.setAdminName("Copy of " + program.getAdminName());
+    program.setLocalizedDisplayName("Copy of " + program.getLocalizedDisplayName());
+    return ok(newOneView.render(request, program));
+  }
+
   /** Return a HTML page containing a form to create a new program in the draft version. */
   @Secure(authorizers = Authorizers.Labels.CIVIFORM_ADMIN)
   public Result newOne(Request request) {

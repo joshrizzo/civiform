@@ -26,6 +26,10 @@ public final class ProgramNewOneView extends BaseHtmlView {
     return render(request, new ProgramForm(), "");
   }
 
+  public Content render(Request request, ProgramForm programForm) {
+    return render(request, programForm, "");
+  }
+
   public Content render(Request request, ProgramForm programForm, String message) {
     String title = "New program information";
 
