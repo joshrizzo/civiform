@@ -1,5 +1,7 @@
 package forms;
 
+import services.program.ProgramDefinition;
+
 /** Form for updating name and description of a program. */
 public class ProgramForm {
   private String adminName;
@@ -16,6 +18,17 @@ public class ProgramForm {
     localizedDisplayDescription = "";
     externalLink = "";
     displayMode = "";
+  }
+
+  // INTERVIEW NOTE: There might be a better convention for this object conversion in the project...
+  public ProgramForm(ProgramDefinition program) {
+    adminName = program.adminName();
+    adminDescription = program.adminDescription();
+    // INTERVIEW NOTE: we might need to pass an actual locale here...
+    localizedDisplayName = program.localizedName().getDefault();
+    localizedDisplayDescription = program.localizedDescription().getDefault();
+    externalLink = program.externalLink();
+    displayMode = program.displayMode().getValue();
   }
 
   public String getAdminName() {

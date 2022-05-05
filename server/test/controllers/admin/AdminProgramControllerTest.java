@@ -77,6 +77,19 @@ public class AdminProgramControllerTest extends ResetPostgres {
   }
 
   @Test
+  public void cloneOne_returnsExpectedFormWithCopyValues() {
+    Request request = addCSRFToken(Helpers.fakeRequest()).build();
+    Program program = ProgramBuilder.newDraftProgram("test program").build();
+
+    Result result = controller.cloneOne(request, program.id);
+
+    assertThat(result.status()).isEqualTo(OK);
+    assertThat(contentAsString(result)).contains("New program");
+    assertThat(contentAsString(result)).contains(CSRF.getToken(request.asScala()).value());
+    // INTERIVEW NOTE: Should we do more assertions here?
+  }
+
+  @Test
   public void create_returnsFormWithErrorMessage() {
     RequestBuilder requestBuilder =
         Helpers.fakeRequest().bodyForm(ImmutableMap.of("name", "", "description", ""));

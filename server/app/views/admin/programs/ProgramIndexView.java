@@ -184,6 +184,7 @@ public final class ProgramIndexView extends BaseHtmlView {
         div(
                 p(lastEditText).withClasses(Styles.TEXT_GRAY_700, Styles.ITALIC),
                 p().withClasses(Styles.FLEX_GROW),
+                maybeRenderCloneLink(draftProgram, activeProgram, request),
                 maybeRenderManageTranslationsLink(draftProgram),
                 maybeRenderEditLink(draftProgram, activeProgram, request),
                 maybeRenderViewApplicationsLink(activeProgram, profile),
@@ -244,6 +245,31 @@ public final class ProgramIndexView extends BaseHtmlView {
       // obsolete or deleted, no edit link, empty div.
       return div();
     }
+  }
+
+  Tag maybeRenderCloneLink(
+          Optional<ProgramDefinition> draftProgram,
+          Optional<ProgramDefinition> activeProgram,
+          Http.Request request) {
+    String cloneLinkText = "Clone →";
+    long cloneId;
+
+    if (draftProgram.isPresent()) {
+      cloneId = draftProgram.get().id();
+    } else if (activeProgram.isPresent()) {
+      cloneId = activeProgram.get().id();
+    } else {
+      // obsolete or deleted, no clone link, empty div.
+      return div();
+    }
+
+    String cloneLink = controllers.admin.routes.AdminProgramController.cloneOne(cloneId).url();
+    return new LinkElement()
+        .setId("program-clone-link-" + draftProgram.get().id())
+        .setHref(cloneLink)
+        .setText(cloneLinkText)
+        .setStyles(Styles.MR_2)
+        .asHiddenForm(request);
   }
 
   private Tag maybeRenderManageTranslationsLink(Optional<ProgramDefinition> draftProgram) {
